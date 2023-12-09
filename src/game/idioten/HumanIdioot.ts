@@ -5,8 +5,9 @@ import {CardPile} from "./card-pile";
 import {take, takeUntil} from "rxjs";
 
 export class HumanIdioot extends Idioot {
-  private button: Phaser.GameObjects.Image;
+  private btnConfirm: Phaser.GameObjects.Image;
   private sparkleParticles: Phaser.GameObjects.Particles.ParticleEmitter;
+  private btnTake: Phaser.GameObjects.Image;
 
   get selected(): Card[] {
     return this.hand.cards.filter(c => c.selected);
@@ -15,12 +16,16 @@ export class HumanIdioot extends Idioot {
   constructor(scene: Phaser.Scene, context: IdiotenContext, name: string, x?: number, y?: number) {
     super(scene, context, name, x, y);
 
-    this.button = this.scene.add.image(175, 0, 'check');
-    this.button.scale = .7;
+    this.btnConfirm = this.scene.add.image(175, 0, 'check');
+    this.btnConfirm.scale = .7;
 
-    this.sparkleParticles = this.scene.add.particles(this.button.x, this.button.y, 'sparkles');
+    this.btnTake = this.scene.add.image(-250, 0, 'reload');
+    this.btnTake.scale = .7;
+
+    this.sparkleParticles = this.scene.add.particles(this.btnConfirm.x, this.btnConfirm.y, 'sparkles');
     this.add(this.sparkleParticles);
-    this.add(this.button);
+    this.add(this.btnConfirm);
+    this.add(this.btnTake);
 
     this.sparkleParticles.setConfig({
       speed: {min: -50, max: 50},
@@ -62,8 +67,8 @@ export class HumanIdioot extends Idioot {
   }
 
   makeInteractive() {
-    this.button.setInteractive({useHandCursor: true});
-    this.button.on('pointerup', () => {
+    this.btnConfirm.setInteractive({useHandCursor: true});
+    this.btnConfirm.on('pointerup', () => {
       try {
         this.context.assertLegalMove(this, this.selected)
       } catch (e: any) {
@@ -74,6 +79,16 @@ export class HumanIdioot extends Idioot {
       const cards = this.selected
       this.removeCardsInteractive(this.hand);
       this.context.rx.playCards(this, cards);
+      setTimeout(() => {
+        this.setCardsInteractive(this.hand);
+        this.updateButton();
+      }, 100);
+    })
+
+    this.btnTake.setInteractive({useHandCursor: true});
+    this.btnTake.on('pointerup', () => {
+      this.removeCardsInteractive(this.hand);
+      this.context.rx.takeTable(this);
       setTimeout(() => {
         this.setCardsInteractive(this.hand);
         this.updateButton();
@@ -106,7 +121,9 @@ export class HumanIdioot extends Idioot {
   updateButton() {
     const legal = this.isLegalMove();
     legal ? this.sparkleParticles.start() : this.sparkleParticles.stop(false);
-    legal ? this.button.clearTint() : this.button.setTint(0x888888);
+    legal ? this.btnConfirm.clearTint() : this.btnConfirm.setTint(0x888888);
+
+    this.context.currentIdioot === this ? this.btnTake.clearTint() : this.btnTake.setTint(0x888888);
   }
 
   stopInteractive() {

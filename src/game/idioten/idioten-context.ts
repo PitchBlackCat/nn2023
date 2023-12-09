@@ -98,4 +98,9 @@ export class IdiotenContext extends Container {
   private declareWinner(idioot: Idioot) {
     console.log(idioot.label.text + ' won!!');
   }
+
+  takeTable(idioot: Idioot) {
+    if (idioot === this.currentIdioot)
+      this.table.moveTo(this.table.cards, idioot.hand);
+  }
 }

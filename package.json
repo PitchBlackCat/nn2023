@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "www": "ng serve --host 0.0.0.0 --ssl --public-host angular.bashemmes.nl",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

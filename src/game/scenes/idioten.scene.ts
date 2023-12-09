@@ -16,6 +16,7 @@ export class IdiotenScene extends Scene {
     this.load.image('sparkles', 'assets/sparkles.png');
     this.load.image('bg', 'assets/poker-table.jpg');
     this.load.image('check', 'assets/check.png');
+    this.load.image('reload', 'assets/reload.png');
   }
 
   create() {

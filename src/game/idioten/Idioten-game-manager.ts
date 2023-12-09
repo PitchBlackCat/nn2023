@@ -51,6 +51,10 @@ export class IdiotenGameManager extends Container {
       this.rx.playedCards(idioot, cards);
     });
 
+    this.rx.takeTable$.subscribe((idioot) => {
+      this.context.takeTable(idioot);
+    });
+
     this.rx.whoHasA$.subscribe(r => {
       this.anouncement.text = `Who has a ${r}!`;
     })

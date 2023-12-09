@@ -13,6 +13,7 @@ export class IdiotenEventManager {
   gameFinished$ = new EventEmitter<void>();
   playCards$ = new EventEmitter<{ idioot: Idioot, cards: Card[] }>();
   playedCards$ = new EventEmitter<{ idioot: Idioot, cards: Card[] }>();
+  takeTable$ = new EventEmitter<Idioot>();
   startTurn$ = new EventEmitter<Idioot>();
   turnStarted$ = new EventEmitter<Idioot>();
 
@@ -60,6 +61,10 @@ export class IdiotenEventManager {
 
   turnStarted(idioot: Idioot) {
     this.turnStarted$.emit(idioot);
+  }
+
+  takeTable(idioot: Idioot) {
+    this.takeTable$.emit(idioot);
   }
 }
 
