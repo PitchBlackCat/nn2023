@@ -26,6 +26,7 @@
     "matter-js": "^0.19.0",
     "phaser": "^3.70.0",
     "phaser-raycaster": "^0.10.9",
+    "phaser3-nineslice": "^0.5.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

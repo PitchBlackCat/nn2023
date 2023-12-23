@@ -1,4 +1,6 @@
-export const random = (max: number) => {
+import {names} from "./names";
+
+export const random = (max: number = 1) => {
   return Math.random() * max;
 }
 export const randomRange = (min: number, max: number) => {
@@ -6,7 +8,7 @@ export const randomRange = (min: number, max: number) => {
 }
 
 export const randomInt = (max: number) => {
-  return Math.round(random(max));
+  return Math.floor(random(max));
 }
 export const randomIntRange = (min: number, max: number) => {
   return Math.round(randomRange(min, max));
@@ -25,4 +27,36 @@ export const randomGaussian = (mean = 0, stdDev = 1) => {
   return scaled;
 };
 
-export const randomString = () => btoa(Math.random().toString()).substring(10,15)
+export const randomString = () => btoa(Math.random().toString()).substring(10, 15)
+
+export const randomItem = <T>(arr: T[]) => {
+  return arr[randomInt(arr.length)];
+}
+
+export const randomName = () => {
+  return `${randomItem(names)}`;
+}
+
+export class SeededRandom {
+  m = 2 ** 35 - 31
+  a = 185852
+  seed: number;
+  s!: number;
+
+  constructor(seed: number) {
+    this.seed = seed;
+    this.reset();
+  }
+
+  reset() {
+    this.s = this.seed % this.m;
+  }
+
+  next() {
+    return (this.s = this.s * this.a % this.m) / this.m;
+  }
+
+  range = (min: number, max: number) => {
+    return this.next() * (max - min) + min;
+  }
+}

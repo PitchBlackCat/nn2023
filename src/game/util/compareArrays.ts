@@ -22,3 +22,15 @@ export const allEqual = <T>(arr: T[]) => arr.every(val => val === arr[0]);
 export const removeFrom = <T>(rem: T[], arr: T[]) => {
   return arr.filter(a => rem.find(b => a === b))
 }
+
+export const getItemBefore = <T>(arr: T[], item: T) => {
+  const index = arr.indexOf(item);
+  if (index < 0) throw Error(`item not in array!`);
+  return arr[(index === 0 ? arr.length : index) - 1];
+}
+
+export const getItemAfter = <T>(arr: T[], item: T) => {
+  const index = arr.indexOf(item);
+  if (index < 0) throw Error(`item not in array!`);
+  return arr[index === arr.length - 1 ? 0 : index + 1];
+}

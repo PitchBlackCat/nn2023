@@ -8,9 +8,26 @@ import {randomGaussian} from "../../../util/random";
 export class SequentialBrain extends AbstractBrain<SequentialBrainConfig> {
   private model: Sequential;
 
+  constructor(model: Sequential, config: SequentialBrainConfig) {
+    super(config);
+    this.model = model;
+  }
+
   static async create(config: SequentialBrainConfig) {
     const model = config.modelConfig ? await tf.loadLayersModel(config.modelConfig) as Sequential : this.createModel(config);
     return new SequentialBrain(model, config);
+  }
+
+  static createModel(config: SequentialBrainConfig): Sequential {
+    const model = tf.sequential();
+
+    [...config.hiddenNodes, config.outputNode].forEach((n, i) => {
+      const args: DenseLayerArgs = n;
+      if (i == 0) args.inputShape = [config.inputNode!.units];
+      model.add(tf.layers.dense(args));
+    })
+
+    return model;
   }
 
   copy(): SequentialBrain {
@@ -35,23 +52,6 @@ export class SequentialBrain extends AbstractBrain<SequentialBrainConfig> {
       this.model.setWeights(mutatedWeights);
     })
     return this;
-  }
-
-  constructor(model: Sequential, config: SequentialBrainConfig) {
-    super(config);
-    this.model = model;
-  }
-
-  static createModel(config: SequentialBrainConfig): Sequential {
-    const model = tf.sequential();
-
-    [...config.hiddenNodes, config.outputNode].forEach((n, i) => {
-      const args: DenseLayerArgs = n;
-      if (i == 0) args.inputShape = [config.inputNode!.units];
-      model.add(tf.layers.dense(args));
-    })
-
-    return model;
   }
 
   think(inputs: number[]): number[] {
